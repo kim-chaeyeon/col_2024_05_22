@@ -1,11 +1,13 @@
 server:
   port: 8090
+
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/sbb_dev
     username: root
     password:
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,6 +16,20 @@ spring:
         show_sql: true
         format_sql: true
         default_batch_fetch_size: 1000
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: false
+
+  freemarker:
+    cache: false
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
 
 logging:
   level:

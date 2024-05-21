@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room Details</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/4.3.1/dist/css/bootstrap.min.css">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .wrap {
+            padding: 40px 0;
+            background-color: #A8C0D6;
+        }
+
+        .wrap .chat {
+            display: flex;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        .wrap .chat .icon {
+            position: relative;
+            overflow: hidden;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #eee;
+        }
+
+        .wrap .chat .icon i {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            font-size: 2.5rem;
+            color: #aaa;
+            transform: translateX(-50%);
+        }
+
+        .wrap .chat .textbox {
+            position: relative;
+            display: inline-block;
+            max-width: calc(100% - 70px);
+            padding: 10px;
+            margin-top: 7px;
+            font-size: 13px;
+            border-radius: 10px;
+        }
+
+        .wrap .chat .textbox::before {
+            position: absolute;
+            display: block;
+            top: 0;
+            font-size: 1.5rem;
+        }
+
+        .wrap .ch1 .textbox {
+            margin-left: 20px;
+            background-color: #ddd;
+        }
+
+        .wrap .ch1 .textbox::before {
+            left: -15px;
+            content: "◀";
+            color: #ddd;
+        }
+
+        .wrap .ch2 {
+            flex-direction: row-reverse;
+        }
+
+        .wrap .ch2 .textbox {
+            margin-right: 20px;
+            background-color: #F9EB54;
+        }
+
+        .wrap .ch2 .textbox::before {
+            right: -15px;
+            content: "▶";
+            color: #F9EB54;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="chatApp">
+    <h2>Chat Room: {{ room.name }}</h2>
+    <div class="wrap">
+        <ul class="list-group mb-3">
+            <li v-for="message in messages" :key="message.id" class="list-group-item chat" :class="{'ch1': message.sender === 'You', 'ch2': message.sender !== 'You'}">
+                <div class="icon"><i class="fa fa-user"></i></div>
+                <div class="textbox">{{ message.sender }}: {{ message.content }}</div>
+            </li>
+        </ul>
+    </div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Type a message..." v-model="newMessage" @keyup.enter="sendMessage">
+        <div class="input-group-append">
+            <button class="btn btn-primary" @click="sendMessage">Send</button>
+        </div>
+    </div>
+</div>
+
+<!-- Vue, Axios, SockJS, and Stomp client libraries -->
+<script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
+<script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
+<script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script>
+<script>
+    var app = new Vue({
+        el: '#chatApp',
+        data: {
+            room: {},
+            messages: [],
+            newMessage: '',
+            roomId: 'ROOM_ID_HERE',  // Replace with dynamic room ID as needed
+            stompClient: null
+        },
+        created() {
+            this.connect();
+            this.loadRoomDetails();
+        },
+        methods: {
+            loadRoomDetails() {
+                // Load room details
+                axios.get(`/chat/room/${this.roomId}`)
+                    .then(response => {
+                        this.room = response.data;
+                    })
+                    .catch(error => {
+                        console.error('Error loading the room details:', error);
+                    });
+            },
+            connect() {
+                const socket = new SockJS('/ws-stomp');
+                this.stompClient = Stomp.over(socket);
+                this.stompClient.connect({}, frame => {
+                    this.stompClient.subscribe(`/sub/chat/room/${this.roomId}`, message => {
+                        this.messages.push(JSON.parse(message.body));
+                    });
+                });
+            },
+            sendMessage() {
+                if (this.newMessage.trim() !== '') {
+                    const message = { sender: 'Username', type: 'CHAT', content: this.newMessage };
+                    this.stompClient.send(`/pub/chat/message`, {}, JSON.stringify(message));
+                    this.newMessage = '';
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
