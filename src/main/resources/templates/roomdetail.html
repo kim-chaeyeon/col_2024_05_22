@@ -1,32 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Room Details</title>
+    <title>Websocket ChatRoom</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/webjars/bootstrap/4.3.1/dist/css/bootstrap.min.css">
     <style>
+        [v-cloak] {
+            display: none;
+        }
+        /* 추가한 채팅 스타일 */
         * {
             padding: 0;
             margin: 0;
             box-sizing: border-box;
         }
-
         a {
             text-decoration: none;
         }
-
         .wrap {
             padding: 40px 0;
             background-color: #A8C0D6;
         }
-
         .wrap .chat {
             display: flex;
             align-items: flex-start;
             padding: 20px;
         }
-
         .wrap .chat .icon {
             position: relative;
             overflow: hidden;
@@ -35,7 +38,6 @@
             border-radius: 50%;
             background-color: #eee;
         }
-
         .wrap .chat .icon i {
             position: absolute;
             top: 10px;
@@ -44,7 +46,6 @@
             color: #aaa;
             transform: translateX(-50%);
         }
-
         .wrap .chat .textbox {
             position: relative;
             display: inline-block;
@@ -54,34 +55,28 @@
             font-size: 13px;
             border-radius: 10px;
         }
-
         .wrap .chat .textbox::before {
             position: absolute;
             display: block;
             top: 0;
             font-size: 1.5rem;
         }
-
         .wrap .ch1 .textbox {
             margin-left: 20px;
             background-color: #ddd;
         }
-
         .wrap .ch1 .textbox::before {
             left: -15px;
             content: "◀";
             color: #ddd;
         }
-
         .wrap .ch2 {
             flex-direction: row-reverse;
         }
-
         .wrap .ch2 .textbox {
             margin-right: 20px;
             background-color: #F9EB54;
         }
-
         .wrap .ch2 .textbox::before {
             right: -15px;
             content: "▶";
@@ -90,72 +85,94 @@
     </style>
 </head>
 <body>
-<div class="container" id="chatApp">
-    <h2>Chat Room: {{ room.name }}</h2>
+<div class="container" id="app" v-cloak>
     <div class="wrap">
-        <ul class="list-group mb-3">
-            <li v-for="message in messages" :key="message.id" class="list-group-item chat" :class="{'ch1': message.sender === 'You', 'ch2': message.sender !== 'You'}">
-                <div class="icon"><i class="fa fa-user"></i></div>
-                <div class="textbox">{{ message.sender }}: {{ message.content }}</div>
-            </li>
-        </ul>
-    </div>
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Type a message..." v-model="newMessage" @keyup.enter="sendMessage">
-        <div class="input-group-append">
-            <button class="btn btn-primary" @click="sendMessage">Send</button>
+        <div class="chat ch1">
+            <div class="icon"><i class="fa fa-user"></i></div>
+            <div class="textbox">Hello, this is a test message.</div>
+        </div>
+        <div class="chat ch2">
+            <div class="icon"><i class="fa fa-user"></i></div>
+            <div class="textbox">Hi, I received your message.</div>
         </div>
     </div>
+    <!-- 기존 채팅 입력 및 메시지 리스트 -->
+    <div>
+        <h2>{{room.name}}</h2>
+    </div>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <label class="input-group-text">내용</label>
+        </div>
+        <input type="text" class="form-control" v-model="message" v-on:keypress.enter="sendMessage">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="button" @click="sendMessage">보내기</button>
+        </div>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item" v-for="message in messages">
+            {{message.sender}} - {{message.message}}</a>
+        </li>
+    </ul>
 </div>
-
-<!-- Vue, Axios, SockJS, and Stomp client libraries -->
-<script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
-<script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
+<!-- JavaScript -->
 <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
-<script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script>
+<script src="/webjars/stomp-websocket/2.3.4/stomp.min.js"></script>
+<script src="/webjars/vue/2.6.14/dist/vue.min.js"></script>
+<script src="/webjars/axios/0.21.1/dist/axios.min.js"></script>
 <script>
-    var app = new Vue({
-        el: '#chatApp',
+    var sock = new SockJS("/ws-stomp");
+    var ws = Stomp.over(sock);
+    var reconnect = 0;
+    var vm = new Vue({
+        el: '#app',
         data: {
+            roomId: '',
             room: {},
-            messages: [],
-            newMessage: '',
-            roomId: 'ROOM_ID_HERE',  // Replace with dynamic room ID as needed
-            stompClient: null
+            sender: '',
+            message: '',
+            messages: []
         },
         created() {
-            this.connect();
-            this.loadRoomDetails();
+            this.roomId = localStorage.getItem('wschat.roomId');
+            this.sender = localStorage.getItem('wschat.sender');
+            this.findRoom();
         },
         methods: {
-            loadRoomDetails() {
-                // Load room details
-                axios.get(`/chat/room/${this.roomId}`)
-                    .then(response => {
-                        this.room = response.data;
-                    })
-                    .catch(error => {
-                        console.error('Error loading the room details:', error);
-                    });
+            findRoom: function() {
+                axios.get('/chat/room/'+this.roomId).then(response => { this.room = response.data; });
             },
-            connect() {
-                const socket = new SockJS('/ws-stomp');
-                this.stompClient = Stomp.over(socket);
-                this.stompClient.connect({}, frame => {
-                    this.stompClient.subscribe(`/sub/chat/room/${this.roomId}`, message => {
-                        this.messages.push(JSON.parse(message.body));
-                    });
-                });
+            sendMessage: function() {
+                ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:this.roomId, sender:this.sender, message:this.message}));
+                this.message = '';
             },
-            sendMessage() {
-                if (this.newMessage.trim() !== '') {
-                    const message = { sender: 'Username', type: 'CHAT', content: this.newMessage };
-                    this.stompClient.send(`/pub/chat/message`, {}, JSON.stringify(message));
-                    this.newMessage = '';
-                }
+            recvMessage: function(recv) {
+                this.messages.unshift({
+                "type":recv.type,
+                "sender":recv.type =='ENTER'?'[알림]':recv.sender,
+                "message":recv.message})
             }
         }
     });
+    function connect() {
+        ws.connect({}, function(frame) {
+            ws.subscribe("/sub/chat/room/"+vm.$data.roomId, function(message) {
+                var recv = JSON.parse(message.body);
+                vm.recvMessage(recv);
+            });
+            ws.send("/pub/chat/message", {}, JSON.stringify({type:'ENTER', roomId:vm.$data.roomId, sender:vm.$data.sender}));
+        }, function(error) {
+            if(reconnect++ <= 5) {
+                setTimeout(function() {
+                    console.log("connection reconnect");
+                    sock = new SockJS("/ws-stomp");
+                    ws = Stomp.over(sock);
+                    connect();
+                }, 10*1000);
+            }
+        });
+    }
+    connect();
 </script>
 </body>
 </html>
