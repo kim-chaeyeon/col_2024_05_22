@@ -82,23 +82,29 @@
             content: "▶";
             color: #F9EB54;
         }
+        .wrap .notification {
+            justify-content: center;
+        }
+        .wrap .notification .textbox {
+            background-color: #f1f1f1;
+            text-align: center;
+        }
+        .wrap .notification .textbox::before {
+            content: none;
+        }
     </style>
 </head>
 <body>
 <div class="container" id="app" v-cloak>
     <div class="wrap">
-        <div class="chat ch1">
-            <div class="icon"><i class="fa fa-user"></i></div>
-            <div class="textbox">Hello, this is a test message.</div>
-        </div>
-        <div class="chat ch2">
-            <div class="icon"><i class="fa fa-user"></i></div>
-            <div class="textbox">Hi, I received your message.</div>
+        <div v-for="message in messages" :class="['chat', message.sender === '[알림]' ? 'notification' : (message.sender === sender ? 'ch2' : 'ch1')]">
+            <div class="icon" v-if="message.sender !== '[알림]'"><i class="fa fa-user"></i></div>
+            <div class="textbox">{{ message.message }}</div>
         </div>
     </div>
     <!-- 기존 채팅 입력 및 메시지 리스트 -->
     <div>
-        <h2>{{room.name}}</h2>
+        <h2>{{ room.name }}</h2>
     </div>
     <div class="input-group">
         <div class="input-group-prepend">
@@ -109,11 +115,6 @@
             <button class="btn btn-primary" type="button" @click="sendMessage">보내기</button>
         </div>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item" v-for="message in messages">
-            {{message.sender}} - {{message.message}}</a>
-        </li>
-    </ul>
 </div>
 <!-- JavaScript -->
 <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
@@ -140,35 +141,40 @@
         },
         methods: {
             findRoom: function() {
-                axios.get('/chat/room/'+this.roomId).then(response => { this.room = response.data; });
+                axios.get('/chat/room/' + this.roomId).then(response => { this.room = response.data; });
             },
             sendMessage: function() {
-                ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:this.roomId, sender:this.sender, message:this.message}));
+                ws.send("/pub/chat/message", {}, JSON.stringify({ type: 'TALK', roomId: this.roomId, sender: this.sender, message: this.message }));
                 this.message = '';
             },
             recvMessage: function(recv) {
-                this.messages.unshift({
-                "type":recv.type,
-                "sender":recv.type =='ENTER'?'[알림]':recv.sender,
-                "message":recv.message})
+                this.messages.push({
+                    "type": recv.type,
+                    "sender": recv.type == 'ENTER' ? '[알림]' : recv.sender,
+                    "message": recv.message
+                });
+                this.$nextTick(() => {
+                    var container = this.$el.querySelector('.wrap');
+                    container.scrollTop = container.scrollHeight;
+                });
             }
         }
     });
     function connect() {
-        ws.connect({}, function(frame) {
-            ws.subscribe("/sub/chat/room/"+vm.$data.roomId, function(message) {
+        ws.connect({}, function (frame) {
+            ws.subscribe("/sub/chat/room/" + vm.$data.roomId, function (message) {
                 var recv = JSON.parse(message.body);
                 vm.recvMessage(recv);
             });
-            ws.send("/pub/chat/message", {}, JSON.stringify({type:'ENTER', roomId:vm.$data.roomId, sender:vm.$data.sender}));
-        }, function(error) {
-            if(reconnect++ <= 5) {
-                setTimeout(function() {
+            ws.send("/pub/chat/message", {}, JSON.stringify({ type: 'ENTER', roomId: vm.$data.roomId, sender: vm.$data.sender }));
+        }, function (error) {
+            if (reconnect++ <= 5) {
+                setTimeout(function () {
                     console.log("connection reconnect");
                     sock = new SockJS("/ws-stomp");
                     ws = Stomp.over(sock);
                     connect();
-                }, 10*1000);
+                }, 10 * 1000);
             }
         });
     }

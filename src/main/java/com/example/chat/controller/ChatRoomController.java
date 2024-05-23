@@ -1,6 +1,6 @@
 package com.example.chat.controller;
 
-import com.example.chat.model.ChatRoom;
+import com.example.chat.entity.ChatRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

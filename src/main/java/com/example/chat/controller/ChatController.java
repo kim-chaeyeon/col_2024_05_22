@@ -1,6 +1,6 @@
 package com.example.chat.controller;
 
-import com.example.chat.model.ChatMessage;
+import com.example.chat.entity.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;

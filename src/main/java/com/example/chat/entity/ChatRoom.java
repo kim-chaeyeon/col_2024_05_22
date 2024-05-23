@@ -1,4 +1,4 @@
-package com.example.chat.model;
+package com.example.chat.entity;
 
 
 import lombok.Getter;
