@@ -24,9 +24,8 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // 로컬 개발 환경: "http://localhost:8090" 사용
-        registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("http://localhost:8090")
-                .withSockJS();
+
+        registry.addEndpoint("/ws-stomp").withSockJS();
     }
 
     @Bean
