@@ -41,7 +41,12 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+tasks.withType(JavaCompile) {
+	options.compilerArgs.add('-parameters')
+}
 
 tasks.withType(JavaCompile) {
-	options.compilerArgs << "-parameters"
+	doFirst {
+		println("Compiling with args: ${options.compilerArgs}")
+	}
 }

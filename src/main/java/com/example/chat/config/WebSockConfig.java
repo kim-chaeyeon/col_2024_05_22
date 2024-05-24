@@ -40,4 +40,5 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 }

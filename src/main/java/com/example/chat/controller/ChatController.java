@@ -18,11 +18,16 @@ public class ChatController {
     @MessageMapping("/chat/message/{roomId}")
     @SendTo("/sub/chat/room/{roomId}")
     public ChatMessage sendMessage(@Payload ChatMessage message, @DestinationVariable("roomId") String roomId) {
-        if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
-            message.setMessage(message.getSender() + "님이 입장하셨습니다.");
+        try {
+            if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
+                message.setMessage(message.getSender() + "님이 입장하셨습니다.");
+            }
+            message.setRoomId(roomId);
+            return messageService.save(message);
+        } catch (Exception e) {
+
+            return null;
         }
-        message.setRoomId(roomId);
-        return messageService.save(message);
     }
 
     @MessageMapping("/chat/private/{roomId}")
