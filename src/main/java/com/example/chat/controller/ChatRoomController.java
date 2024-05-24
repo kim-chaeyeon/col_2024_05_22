@@ -1,10 +1,11 @@
 package com.example.chat.controller;
 
 import com.example.chat.model.ChatRoom;
-import com.example.chat.repo.ChatRoomRepository;
+import com.example.chat.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
