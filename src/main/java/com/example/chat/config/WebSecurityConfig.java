@@ -23,10 +23,6 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(new AntPathRequestMatcher("/ws-stomp/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/pub/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/sub/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/chat/**")).hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(withDefaults())
@@ -36,13 +32,11 @@ public class WebSecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // 실제 운영 환경에서는 안전한 비밀번호 인코더 사용 권장
         return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        // 인메모리 사용자 생성
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
         manager.createUser(User.withUsername("user")
                 .password(passwordEncoder().encode("user"))

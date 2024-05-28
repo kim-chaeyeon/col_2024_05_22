@@ -38,7 +38,7 @@ const vm = new Vue({
             const sender = prompt('대화명을 입력해 주세요.');
             if (sender) {
                 localStorage.setItem('wschat.sender', sender);
-                localStorage.setItem('wschat.roomId', roomId);
+                localStorage.setItem('wschat.roomId', roomId.toString());  // UUID를 문자열로 명시적 변환
                 window.location.href = `/chat/room/enter/${roomId}`;
             }
         }
