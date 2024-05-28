@@ -5,7 +5,6 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/webjars/bootstrap/4.3.1/dist/css/bootstrap.min.css">
     <style>
@@ -137,7 +136,6 @@
             <div class="textbox">{{ message.message }}</div>
         </div>
     </div>
-    <!-- 기존 채팅 입력 및 메시지 리스트 -->
     <div class="input-group">
         <div class="input-group-prepend">
             <label class="input-group-text">내용</label>
@@ -153,66 +151,6 @@
 <script src="/webjars/stomp-websocket/2.3.4/stomp.min.js"></script>
 <script src="/webjars/vue/2.6.14/dist/vue.min.js"></script>
 <script src="/webjars/axios/0.21.1/dist/axios.min.js"></script>
-<script>
-    var sock = new SockJS("/ws-stomp");
-    var ws = Stomp.over(sock);
-    var reconnect = 0;
-    var vm = new Vue({
-        el: '#app',
-        data: {
-            roomId: '',
-            room: {},
-            sender: '',
-            message: '',
-            messages: []
-        },
-        created() {
-            this.roomId = localStorage.getItem('wschat.roomId');
-            this.sender = localStorage.getItem('wschat.sender');
-            this.findRoom();
-        },
-        methods: {
-            findRoom: function() {
-                axios.get('/chat/room/' + this.roomId).then(response => { this.room = response.data; });
-            },
-            sendMessage: function() {
-                ws.send(`/pub/chat/message/${this.roomId}`, {}, JSON.stringify({ type: 'TALK', roomId: this.roomId, sender: this.sender, message: this.message }));
-                this.message = '';
-            },
-            recvMessage: function(recv) {
-                this.messages.push({
-                    "type": recv.type,
-                    "sender": recv.type == 'ENTER' ? '[알림]' : recv.sender,
-                    "message": recv.message
-                });
-                this.$nextTick(() => {
-                    var container = this.$el.querySelector('.wrap');
-                    container.scrollTop = container.scrollHeight;
-                });
-            }
-        }
-    });
-    function connect() {
-        ws.connect({}, function (frame) {
-            ws.subscribe(`/sub/chat/room/${vm.$data.roomId}`, function (message) {
-                var recv = JSON.parse(message.body);
-                vm.recvMessage(recv);
-            });
-            ws.send(`/pub/chat/message/${vm.$data.roomId}`, {}, JSON.stringify({ type: 'ENTER', roomId: vm.$data.roomId, sender: vm.$data.sender }));
-        }, function (error) {
-            if (reconnect++ <= 5) {
-                setTimeout(function () {
-                    console.log("connection reconnect");
-                    sock = new SockJS("/ws-stomp");
-                    ws = Stomp.over(sock);
-                    connect();
-                }, 10 * 1000);
-            }
-        });
-    }
-
-
-    connect();
-</script>
+<script src="/js/chatroom.js"></script>
 </body>
 </html>

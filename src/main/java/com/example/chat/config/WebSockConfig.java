@@ -24,14 +24,13 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-
-        registry.addEndpoint("/ws-stomp").withSockJS();
+        registry.addEndpoint("/ws-stomp").setAllowedOrigins("http://localhost:8090").withSockJS();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:8090")); // 개발 환경에 적합하도록 수정
+        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:8090"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
@@ -40,5 +39,4 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }
