@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +21,7 @@ public class ChatRoomController {
 
     private final ChatRoomRepository chatRoomRepository;
 
-    @PreAuthorize("isAnonymous()")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/rooms")
     public String rooms(Model model) {
         return "room";  // Assuming 'room.html' is under the 'src/main/resources/templates' directory
@@ -35,7 +34,7 @@ public class ChatRoomController {
         return ResponseEntity.ok(rooms);
     }
 
-
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/room")
     @ResponseBody
     public ResponseEntity<ChatRoom> createRoom(@RequestParam("name") String name) {
