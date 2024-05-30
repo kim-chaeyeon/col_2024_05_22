@@ -27,6 +27,7 @@ var vm = new Vue({
         },
         connect() {
             this.ws.connect({}, (frame) => {
+                console.log('Connected: ' + frame);
                 this.ws.subscribe(`/sub/chat/room/${this.roomId}`, (message) => {
                     var recv = JSON.parse(message.body);
                     this.recvMessage(recv);

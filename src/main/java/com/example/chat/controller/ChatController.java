@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class ChatController {
+public class    ChatController {
 
     @Autowired
     private ChatMessageService messageService;
@@ -33,11 +33,7 @@ public class ChatController {
     @MessageMapping("/chat/private/{roomId}")
     @SendTo("/sub/chat/private/{roomId}")
     public ChatMessage sendPrivateMessage(@Payload ChatMessage message, @DestinationVariable("roomId") String roomId) {
-        if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
-            message.setRoomId(roomId);
-            return messageService.save(message);
-        } else {
-            throw new IllegalStateException("User not authenticated");
-        }
+        message.setRoomId(roomId);
+        return messageService.save(message);
     }
 }
