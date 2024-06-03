@@ -1,23 +1,140 @@
-<html lang="ko">
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="|${pageName}|"></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>밥은 먹고 다니냐?</title>
+    <style>
+        * {
+            font-weight: bold;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+        }
+        .header,
+        footer {
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
+            background-color: indianred;
+            font-size: 20px;
+        }
+        .container::after {
+            content: '';
+            clear: both;
+            display: block;
+        }
+        .container {
+            margin: 10px 0;
+        }
+        nav,
+        aside {
+            width: 100px;
+            height: 400px;
+            float: left;
+            line-height: 400px;
+            background-color: indianred;
+        }
+        aside {
+            float: right;
+        }
+        section {
+            height: 400px;
+            background-color: indianred;
+            float: left;
+            width: calc(100% - 200px - 20px);
+            margin-left: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .title {
+            height: 30px;
+            line-height: 30px;
+        }
+        .container > section > header {
+            height: 50px;
+            background-color: darkkhaki;
+            line-height: 50px;
+        }
+        .container > section > footer {
+            height: 80px;
+            background-color: darkkhaki;
+            line-height: 80px;
+        }
+        .container > section > article {
+            height: calc(100% - 160px - 20px);
+            background-color: darkkhaki;
+            line-height: 180px;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
-<div>
-    <h1><a th:href="|/${loginType}|">[[${pageName}]]</a></h1> <hr/>
-    <div th:if="${name == null}">
-        <h3>로그인 되어있지 않습니다!</h3>
-        <button th:onclick="|location.href='@{/{loginType}/join (loginType=${loginType})}'|">회원 가입</button> <br/><br/>
-        <button th:onclick="|location.href='@{/{loginType}/login (loginType=${loginType})}'|">로그인</button>
+<header class="header" id="header">
+    <div style="float: left;">
+        <a href="/">밥은 먹고 다니냐?</a>
     </div>
-    <div th:unless="${name == null}">
-        <h3>[[${name}]]님 환영합니다!</h3>
-        <button th:onclick="|location.href='@{/{loginType}/info (loginType=${loginType})}'|">마이 페이지</button> <br/><br/>
-        <button th:onclick="|location.href='@{/{loginType}/admin (loginType=${loginType})}'|">관리자 페이지</button> <br/><br/>
-        <button th:onclick="|location.href='@{/{loginType}/logout (loginType=${loginType})}'|">로그아웃</button>
+    <div style="float: right;">
+        <a sec:authorize="isAnonymous()" href="/member/login">로그인</a>
+        <a sec:authorize="isAuthenticated()" href="/member/logout">로그아웃</a>
     </div>
+    <div style="float: right; margin-right: 10px;">
+        <a sec:authorize="isAuthenticated()" href="/member/myPage">마이페이지</a>
+    </div>
+    <div style="float: right; margin-right: 10px;">
+    <span sec:authorize="isAuthenticated()">
+        <span th:text="${#authentication.name}"></span>
+    </span>
+    </div>
+
+</header>
+
+<div class="container">
+    <nav>&lt;nav&gt;</nav>
+    <section>
+        <div class="title">&lt;section&gt;</div>
+        <header>&lt;header&gt;</header>
+        <article>&lt;article&gt;</article>
+        <footer>&lt;footer&gt;</footer>
+    </section>
+    <aside>&lt;aside&gt;</aside>
 </div>
+<footer>&lt;footer&gt;</footer>
+
+<script>
+    // 서버에서 받아온 사용자 정보
+    var userInfo = {
+        loggedIn: false, // 로그인 상태 여부
+        username: "" // 로그인된 사용자 이름
+    };
+
+    // 헤더의 로그인 링크와 로그아웃 버튼을 제어하는 함수
+    function toggleLoginState(loggedIn) {
+        var loginLink = document.querySelector(".nav-link[sec\\:authorize=\"isAnonymous()\"]");
+        var logoutButton = document.querySelector(".nav-link[sec\\:authorize=\"isAuthenticated()\"]");
+
+        if (loggedIn) {
+            // 로그인되어 있는 경우, 로그아웃 버튼 표시
+            loginLink.style.display = "none";
+            logoutButton.style.display = "inline";
+        } else {
+            // 로그인되어 있지 않은 경우, 로그인 링크 표시
+            loginLink.style.display = "inline";
+            logoutButton.style.display = "none";
+        }
+    }
+
+    // 로그아웃 처리 함수
+    function logout() {
+        // 로그아웃 처리 작업 수행 (예: 세션 삭제 등)
+        // 여기서는 간단히 예시로 로그인 상태를 false로 변경하는 것으로 가정합니다.
+        userInfo.loggedIn = false;
+        toggleLoginState(false); // 로그아웃 상태로 변경
+    }
+
+    // 초기 로그인 상태에 따라 헤더의 로그인 링크 또는 로그아웃 버튼을 표시
+    toggleLoginState(userInfo.loggedIn);
+</script>
 </body>
 </html>
