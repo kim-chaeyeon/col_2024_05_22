@@ -2,6 +2,7 @@ package com.example.plz.domain.member.Controller;
 
 import com.example.plz.domain.email.EmailService;
 import com.example.plz.domain.member.dto.LoginRequest;
+import com.example.plz.domain.member.entity.Member;
 import com.example.plz.domain.member.service.MemberService;
 import com.example.plz.domain.member.service.VerificationCodeService;
 import jakarta.servlet.http.HttpSession;
@@ -29,9 +30,11 @@ public class MemberController {
         return "member/login";
     }
 
-    @GetMapping("/join")
-    public String joinPage() {
-        return "member/signup";
+    @GetMapping("/myPage")
+    public String myPage(Model model) {
+        Member currentMember = memberService.getCurrentMember();
+        model.addAttribute("member", currentMember);
+        return "member/myPage";
     }
 
     @GetMapping("/admin")
