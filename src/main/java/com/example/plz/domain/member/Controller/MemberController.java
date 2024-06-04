@@ -25,7 +25,7 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
-    public String loginPage(Model model) {
+    public String loginPage() {
         return "member/login";
     }
 
