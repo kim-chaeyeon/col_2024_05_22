@@ -9,6 +9,7 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
         }
         header {
             background-color: #FFCE45;
@@ -17,6 +18,7 @@
             align-items: center;
             padding: 0 20px;
             height: 60px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         header a {
             color: #333;
@@ -35,6 +37,7 @@
         .container {
             display: flex;
             margin: 20px;
+            justify-content: center;
         }
         nav,
         aside {
@@ -45,12 +48,18 @@
             margin: 0 10px;
             font-weight: bold;
             text-align: center;
+            height: 300px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         section {
             flex-grow: 1;
             background-color: #FFF5DB;
             padding: 20px;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         section header,
         section footer {
@@ -66,7 +75,7 @@
             box-sizing: border-box;
             font-weight: bold;
             text-align: center;
-            height: calc(100% - 100px);
+            flex-grow: 1;
         }
         footer {
             background-color: #FFCE45;
@@ -75,6 +84,12 @@
             text-align: center;
             font-weight: bold;
             margin-top: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 20px;
         }
     </style>
 </head>
@@ -92,13 +107,21 @@
 </header>
 
 <div class="container">
-    <nav>&lt;nav&gt;</nav>
+    <nav>
+        <img src="https://i.ibb.co/j5tSMPV/image.jpg" alt="밥은 먹고 다니냐?" >
+        &lt;nav&gt;</nav>
     <section>
         <header>&lt;header&gt;</header>
-        <article>&lt;article&gt;</article>
-        <footer>&lt;footer&gt;</footer>
+        <article>
+            <img src="https://i.ibb.co/n0szW03/image.png" alt="밥은 먹고 다니냐?">
+            &lt;article&gt;
+        </article>
+        <footer>&lt;footer&gt;
+        </footer>
     </section>
-    <aside>&lt;aside&gt;</aside>
+    <aside>
+        <img src="https://i.ibb.co/j5tSMPV/image.jpg" alt="밥은 먹고 다니냐?" >
+        &lt;aside&gt;</aside>
 </div>
 <footer>&lt;footer&gt;</footer>
 
