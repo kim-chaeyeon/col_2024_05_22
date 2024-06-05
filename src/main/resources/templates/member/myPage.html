@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>내 정보 페이지</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* 스타일은 로그인 페이지와 동일하게 사용합니다 */
         body {
             display: flex;
             justify-content: center;
@@ -11,6 +11,7 @@
             height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
         }
         .container {
             text-align: center;
@@ -23,13 +24,41 @@
         h1 {
             margin-bottom: 30px;
             font-size: 28px;
+            color: #333;
         }
-        /* 추가적인 스타일링은 필요에 따라 작성하세요 */
         .profile-img {
             width: 150px;
             height: 150px;
             border-radius: 50%;
             margin-bottom: 20px;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        p {
+            font-size: 16px;
+            margin: 10px 0;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .main-btn {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #FFCE45;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .main-btn:hover {
+            background-color: #FFD700;
+        }
+        .icon {
+            margin-right: 10px;
+            color: #FFCE45;
         }
     </style>
 </head>
@@ -39,23 +68,33 @@
 <!-- 내 정보 페이지 -->
 <div class="container">
     <a th:href="@{/}" class="main-btn">메인 화면으로 이동</a><br>
+    <a th:href="@{/member/modify}" class="main-btn">마이 페이지 수정하기</a><br>
     <h1>내 정보 페이지</h1>
     <img th:src="@{|/file/${member.thumbnailImg}|}" alt="프로필 사진" class="profile-img"/>
-    <p>닉네임: <span th:text="${member.nickname}"></span></p>
-    <p>이메일: <span th:text="${member.email}"></span></p>
-    <p>전화번호: <span th:text="${member.phoneNumber}"></span></p>
-    <p>선호음식: <span th:text="${member.favoriteFood}"></span></p>
-    <p>성별: <span th:text="${member.gender}"></span></p>
-    <p>나이: <span th:text="${member.age}"></span></p>
-    <p>MBTI: <span th:text="${member.mbti}"></span></p>
-    <p>인스타: <span th:text="${member.sns}"></span></p>
-    <p>지역: <span th:text="${member.region}"></span></p>
+    <p><i class="fas fa-user icon"></i>닉네임: <span th:text="${member.nickname}"></span></p>
+    <p><i class="fas fa-id-badge icon"></i>로그인 ID: <span th:text="${member.loginId}"></span></p>
+    <p><i class="fas fa-envelope icon"></i>이메일: <span th:text="${member.email}"></span></p>
+    <p><i class="fas fa-phone icon"></i>전화번호: <span th:text="${member.phoneNumber}"></span></p>
+    <p><i class="fas fa-utensils icon"></i>선호 음식: <span th:text="${member.favoriteFood}"></span></p>
+    <p><i class="fas fa-venus-mars icon"></i>성별: <span th:text="${member.gender}"></span></p>
+    <p><i class="fas fa-birthday-cake icon"></i>나이: <span th:text="${member.age}"></span></p>
+    <p><i class="fas fa-smile icon"></i>MBTI: <span th:text="${member.mbti}"></span></p>
+    <p><i class="fas fa-instagram icon"></i>인스타: <span th:text="${member.sns}"></span></p>
+    <p><i class="fas fa-map-marker-alt icon"></i>지역: <span th:text="${member.region}"></span></p>
 </div>
-</body>
-</html>
 
 <script>
-    if (!loggedIn) {
-        window.location.href = "member/login"; // 로그인 페이지의 URL로 리다이렉트합니다.
+    // 로그인 여부 확인하는 함수
+    function checkLogin() {
+        var loggedIn = true; // 실제로는 서버에서 로그인 상태를 확인하는 로직이 필요합니다.
+        if (!loggedIn) {
+            window.location.href = "/member/login"; // 로그인 페이지의 URL로 리다이렉트합니다.
+        }
     }
+
+    // 페이지 로드 시 로그인 상태 확인
+    window.onload = checkLogin;
 </script>
+
+</body>
+</html>

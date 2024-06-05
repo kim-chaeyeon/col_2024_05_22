@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>내 정보 페이지</title>
+    <style>
+        /* 스타일은 로그인 페이지와 동일하게 사용합니다 */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        /* 추가적인 스타일링은 필요에 따라 작성하세요 */
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 내 정보 페이지 -->
+<div class="container">
+    <a th:href="@{/}" class="main-btn">메인 화면으로 이동</a><br>
+    <a th:href="@{/member/myPage}" class="main-btn">마이페이지로 이동</a><br>
+    <h1>수정 페이지 </h1>
+    <!--    <img th:src="@{|/file/${member.thumbnailImg}|}" alt="프로필 사진" class="profile-img"/>-->
+    <form action="modifyForm" method="post" enctype="multipart/form-data" th:action="@{/member/modify}" >
+
+        <label for="phoneNumber">전화번호 (필수):</label><br>
+        <input type="text" id="phoneNumber" name="phoneNumber" required><br>
+        <label for="username">아이디 (필수):</label><br>
+        <input type="text" id="username" name="username" required><br>
+        <label for="nickname">닉네임 (필수):</label><br>
+        <input type="text" id="nickname" name="nickname" required><br>
+        <label for="password">비밀번호 (필수):</label><br>
+        <input type="password" id="password" name="password" required><br>
+        <label for="email">이메일 (필수):</label><br>
+        <input type="email" id="email" name="email" required><br>
+        <label for="age">나이 (필수, 성인만 가능):</label><br>
+        <input type="number" id="age" name="age" required min="18"><br>
+        <label for="gender">성별:</label><br>
+        <input type="radio" id="남성" name="gender" value="남성">
+        <label for="male">남성</label>
+        <input type="radio" id="여성" name="gender" value="여성">
+        <label for="female">여성</label><br>
+        <label for="region">지역:</label><br>
+        <select id="region" name="region">
+            <option value="서울">서울</option>
+            <option value="경기">경기</option>
+            <option value="인천">인천</option>
+            <option value="대전">대전</option>
+            <option value="부산">부산</option>
+            <!-- 다른 지역 옵션들 추가 -->
+        </select><br><br>
+        <label for="favoriteFood">선호 음식 (필수):</label><br>
+        <input type="text" id="favoriteFood" name="favoriteFood" required><br><br>
+        <label for="mbti">본인 MBTI (선택):</label><br>
+        <input type="text" id="mbti" name="mbti" ><br><br>
+        <label for="sns"> 인스타 (선택):</label><br>
+        <input type="text" id="sns" name="sns" ><br><br>
+        <label for="thumbnail">본인 사진 (필수):</label><br><br>
+        <input type="file" name="thumbnail" accept="image/png, image/gif, image/jpeg" required><br><br>
+        <button type="submit" class="btn">수정 하기</button>
+    </form>
+</div>
+</body>
+</html>
+
+<script>
+    if (!loggedIn) {
+        window.location.href = "member/login"; // 로그인 페이지의 URL로 리다이렉트합니다.
+    }
+</script>

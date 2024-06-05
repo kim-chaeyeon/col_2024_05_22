@@ -37,6 +37,33 @@ public class MemberController {
         return "member/myPage";
     }
 
+    @GetMapping("/modify")
+    public String modifyForm(Model model){
+        return "member/modify";
+    }
+
+    @PostMapping("/modify")
+    public String modify(@RequestParam("username") String username,
+                         @RequestParam("phoneNumber") String phoneNumber,
+                         @RequestParam("nickname") String nickname,
+                         @RequestParam("password") String password,
+                         @RequestParam("email") String email,
+                         @RequestParam("age") int age,
+                         @RequestParam("gender") String gender,
+                         @RequestParam("region") String region,
+                         @RequestParam("mbti") String mbti,
+                         @RequestParam("sns") String sns,
+                         @RequestParam("favoriteFood") String favoriteFood,
+                         @RequestParam("thumbnail") MultipartFile thumbnail
+    ) {
+
+        memberService.signup(username, phoneNumber, nickname, password, age, email, gender, region, favoriteFood, mbti, sns);
+
+        // 회원 가입 후 로그인 페이지로 리다이렉트
+        return "redirect:/member/myPage";
+    }
+
+
     @GetMapping("/admin")
     public String adminPage() {
         return "member/admin";
