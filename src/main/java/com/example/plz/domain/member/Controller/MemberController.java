@@ -54,7 +54,6 @@ public class MemberController {
                          @RequestParam("password") String password,
                          @RequestParam("email") String email,
                          @RequestParam("age") int age,
-                         @RequestParam("gender") String gender,
                          @RequestParam("region") String region,
                          @RequestParam("mbti") String mbti,
                          @RequestParam("sns") String sns,

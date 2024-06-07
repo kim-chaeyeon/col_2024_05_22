@@ -96,26 +96,6 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-//    @Transactional
-//    public Member modify( Member member, String phoneNumber, String nickname, String password, int age,
-//                         String email, String region, String favoriteFood, String mbti, String sns) {
-//        Member member = getCurrentMember();
-//
-//         member = Member.builder()
-//                .phoneNumber(phoneNumber)
-//                .nickname(nickname)
-//                .password(passwordEncoder.encode(password))
-//                .email(email)
-//                .region(region)
-//                .favoriteFood(favoriteFood)
-//                .age(age)
-//                .sns(sns)
-//                .mbti(mbti)
-//                .build();
-//
-//        return memberRepository.save(member);
-//    }
-
     @Value("${custom.fileDirPath}")
     private String fileDirPath;
 

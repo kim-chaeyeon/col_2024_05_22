@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>내 정보 페이지</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">-->
     <style>
         body {
             display: flex;
@@ -78,9 +78,11 @@
     <a th:href="@{/}" class="main-btn">메인 화면으로 이동</a><br>
     <a th:href="@{/member/modify}" class="main-btn">마이 페이지 수정하기</a><br>
     <h1>내 정보 페이지</h1>
+<!--    <img th:src="@{|/file/${member.thumbnailImg}|}" alt="프로필 사진" class="profile-img"/>-->
     <img th:src="@{|/file/${member.thumbnailImg}|}" alt="프로필 사진" class="profile-img"/>
     <p><i class="fas fa-user icon"></i>닉네임: <span th:text="${member.nickname}"></span></p>
-    <p><i class="fas fa-id-badge icon"></i>로그인 ID: <span th:text="${member.loginId}"></span></p>
+    <p><i class="fas fa-user icon"></i>소셜 로그인 ID: <span th:text="${member.loginId}"></span></p>
+    <p><i class="fas fa-id-badge icon"></i> ID: <span th:text="${member.username}"></span></p>
     <p><i class="fas fa-envelope icon"></i>이메일: <span th:text="${member.email}"></span></p>
     <p><i class="fas fa-phone icon"></i>전화번호: <span th:text="${member.phoneNumber}"></span></p>
     <p><i class="fas fa-utensils icon"></i>선호 음식: <span th:text="${member.favoriteFood}"></span></p>
