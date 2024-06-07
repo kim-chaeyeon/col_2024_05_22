@@ -19,8 +19,7 @@ public class JoinRequest {
     private String password;
     private String passwordCheck;
 
-    @NotBlank(message = "이름을 입력하세요.")
-    private String name;
+
 
 
 
@@ -28,7 +27,6 @@ public class JoinRequest {
         return Member.builder()
                 .username(username)
                 .password(password)
-                .name(name)
                 .build();
     }
 }

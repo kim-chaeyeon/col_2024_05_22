@@ -49,7 +49,7 @@ public class MemberController {
     }
 
     @PostMapping("/modify")
-    public String modify(Model model, @RequestParam("phoneNumber") String phoneNumber,
+    public String modify(@RequestParam("phoneNumber") String phoneNumber,
                          @RequestParam("nickname") String nickname,
                          @RequestParam("password") String password,
                          @RequestParam("email") String email,
@@ -69,7 +69,7 @@ public class MemberController {
         }
 
         // 회원 정보를 수정합니다.
-        memberService.modify(member, phoneNumber, nickname, password, age, email, region, favoriteFood, mbti, sns);
+        memberService.modify(member, phoneNumber, nickname, password, age, email, region, favoriteFood, mbti, sns, thumbnail);
 
         // 수정 완료 후 마이페이지로 리다이렉트
         return "redirect:/member/myPage";
@@ -110,7 +110,7 @@ public class MemberController {
         emailService.send(email, subject, body);
 
         // 파일 업로드 성공 시 회원 가입 처리
-        memberService.signup(username, phoneNumber, nickname, password, age, email, gender, region, favoriteFood, mbti, sns);
+        memberService.signup(username, phoneNumber, nickname, password, age, email, gender, region, favoriteFood, mbti, sns, thumbnail);
 
         // 회원 가입 후 로그인 페이지로 리다이렉트
         return "redirect:/member/verifyCode";

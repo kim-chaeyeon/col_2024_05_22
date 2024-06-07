@@ -29,7 +29,7 @@ public class Dev {
 
                 // Call the signup method
                 memberService.signup("user1", "01012345678", "user1", "1234", 0,"admin@test.com"
-                       , "남자","고성", "양식", "대전", "tong");
+                       , "남자","고성", "양식", "대전", "tong",multipartFile);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -42,7 +42,7 @@ public class Dev {
                 // Call the signup method
 
                 memberService.signup("user2", "01012345678", "user2", "1234", 25,
-                        "admin@test.com", "여자", "대전", "일식", "iiii","holy");
+                        "admin@test.com", "여자", "대전", "일식", "iiii","holy",multipartFile1);
             } catch (IOException e) {
                 e.printStackTrace();
             }

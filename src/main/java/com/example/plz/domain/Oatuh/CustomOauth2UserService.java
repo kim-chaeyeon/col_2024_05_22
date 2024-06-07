@@ -47,16 +47,20 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         String providerId = oAuth2UserInfo.getProviderId();
         String email = oAuth2UserInfo.getEmail();
         String loginId = provider + "_" + providerId;
-        String name = oAuth2UserInfo.getName();
+        String username = oAuth2UserInfo.getName();
+        String nickname = oAuth2UserInfo.getNickname();
+
 
         Member findMember = memberRepository.findByLoginId(loginId);
         Member member;
 
         if (findMember == null) {
             member = Member.builder()
+                    .nickname(nickname)
                     .loginId(loginId)
-                    .name(name)
+                    .username(username)
                     .provider(provider)
+                    .email(email)
                     .providerId(providerId)
                     .role(MemberRole.USER)
                     .build();
