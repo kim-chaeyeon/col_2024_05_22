@@ -97,7 +97,8 @@ public class MemberController {
                          @RequestParam("mbti") String mbti,
                          @RequestParam("sns") String sns,
                          @RequestParam("favoriteFood") String favoriteFood,
-                         @RequestParam("thumbnail") MultipartFile thumbnail
+                         @RequestParam("thumbnail") MultipartFile thumbnail,
+                         HttpSession session
     ) {
 
         // 이메일 확인용 코드 생성
@@ -107,6 +108,8 @@ public class MemberController {
         String subject = "회원가입 인증코드";
         String body = "회원가입인증 코드입니다. : " + verificationCode;
         emailService.send(email, subject, body);
+
+        session.setAttribute("verificationCode", verificationCode);
 
         // 파일 업로드 성공 시 회원 가입 처리
         memberService.signup(username, phoneNumber, nickname, password, age, email, gender, region, favoriteFood, mbti, sns, thumbnail);
