@@ -13,14 +13,14 @@ import java.util.Map;
 public class CustomOauth2UserDetails implements UserDetails, OAuth2User {
 
     private final Member member;
-    private Map<String, Object> attributes;
+    private final Map<String, Object> attributes;
+    private final String name; // 사용자의 이름 필드 추가
 
-    public CustomOauth2UserDetails(Member member, Map<String, Object> attributes) {
-
+    public CustomOauth2UserDetails(Member member, Map<String, Object> attributes, String name) {
         this.member = member;
         this.attributes = attributes;
+        this.name = name;
     }
-
 
     @Override
     public Map<String, Object> getAttributes() {
@@ -29,7 +29,7 @@ public class CustomOauth2UserDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
     @Override

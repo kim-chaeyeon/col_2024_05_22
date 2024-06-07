@@ -57,11 +57,11 @@ public class MemberService {
         }
 
         // 새로운 회원 저장
-        return signupSocialUser(username, nickname,email);
+        return signupSocialUser(username, nickname, email);
     }
 
     @Transactional
-    public Member signupSocialUser(String username, String email, String nickname) {
+    public Member signupSocialUser(String username, String nickname, String email) {
         // 소셜 로그인한 회원 저장
         return signup(username, "", nickname, "",0, email, "", "", "", "", "",  null);
     }

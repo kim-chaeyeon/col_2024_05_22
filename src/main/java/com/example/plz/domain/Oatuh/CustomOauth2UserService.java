@@ -50,7 +50,6 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         String username = oAuth2UserInfo.getName();
         String nickname = oAuth2UserInfo.getNickname();
 
-
         Member findMember = memberRepository.findByLoginId(loginId);
         Member member;
 
@@ -69,6 +68,9 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
             member = findMember;
         }
 
-        return new CustomOauth2UserDetails(member, oAuth2User.getAttributes());
+        // 사용자 이름이 null이면 빈 문자열로 처리
+        String name = (username != null) ? username : "";
+
+        return new CustomOauth2UserDetails(member, oAuth2User.getAttributes(), name);
     }
 }
