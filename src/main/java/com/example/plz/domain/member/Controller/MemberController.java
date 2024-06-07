@@ -38,31 +38,42 @@ public class MemberController {
     }
 
     @GetMapping("/modify")
-    public String modifyForm(Model model){
+    public String modifyForm(Model model) {
+        Member member = memberService.getCurrentMember();
+        if (member == null) {
+            // 사용자 정보가 없는 경우 로그인 페이지로 리다이렉트
+            return "redirect:/member/login";
+        }
+        model.addAttribute("member", member);
         return "member/modify";
     }
 
     @PostMapping("/modify")
-    public String modify(
-            @RequestParam("phoneNumber") String phoneNumber,
-            @RequestParam("nickname") String nickname,
-            @RequestParam("password") String password,
-            @RequestParam("email") String email,
-            @RequestParam("age") int age,
-            @RequestParam("region") String region,
-            @RequestParam("mbti") String mbti,
-            @RequestParam("sns") String sns,
-            @RequestParam("favoriteFood") String favoriteFood,
-            @RequestParam("thumbnail") MultipartFile thumbnail
-    ) {
-        // 클라이언트에서 요청 시 'username' 매개변수 제거
+    public String modify(Model model, @RequestParam("phoneNumber") String phoneNumber,
+                         @RequestParam("nickname") String nickname,
+                         @RequestParam("password") String password,
+                         @RequestParam("email") String email,
+                         @RequestParam("age") int age,
+                         @RequestParam("gender") String gender,
+                         @RequestParam("region") String region,
+                         @RequestParam("mbti") String mbti,
+                         @RequestParam("sns") String sns,
+                         @RequestParam("favoriteFood") String favoriteFood,
+                         @RequestParam("thumbnail") MultipartFile thumbnail) {
 
-        memberService.modify(phoneNumber, nickname, password, age, email, region, favoriteFood, mbti, sns);
+        // 현재 로그인된 회원 정보를 가져옵니다.
+        Member member = memberService.getCurrentMember();
+        if (member == null) {
+            // 사용자 정보가 없는 경우 로그인 페이지로 리다이렉트
+            return "redirect:/member/login";
+        }
 
-        // 회원 정보 수정 후 리다이렉트
+        // 회원 정보를 수정합니다.
+        memberService.modify(member, phoneNumber, nickname, password, age, email, region, favoriteFood, mbti, sns);
+
+        // 수정 완료 후 마이페이지로 리다이렉트
         return "redirect:/member/myPage";
     }
-
 
     @GetMapping("/admin")
     public String adminPage() {

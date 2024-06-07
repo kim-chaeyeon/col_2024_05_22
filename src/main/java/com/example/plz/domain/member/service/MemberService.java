@@ -82,25 +82,47 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+//    @Transactional
+//    public Member modify( Member member, String phoneNumber, String nickname, String password, int age,
+//                         String email, String region, String favoriteFood, String mbti, String sns) {
+//        Member member = getCurrentMember();
+//
+//         member = Member.builder()
+//                .phoneNumber(phoneNumber)
+//                .nickname(nickname)
+//                .password(passwordEncoder.encode(password))
+//                .email(email)
+//                .region(region)
+//                .favoriteFood(favoriteFood)
+//                .age(age)
+//                .sns(sns)
+//                .mbti(mbti)
+//                .build();
+//
+//        return memberRepository.save(member);
+//    }
+
     @Transactional
-    public Member modify( String phoneNumber, String nickname, String password, int age,
+    public Member modify(Member member, String phoneNumber, String nickname, String password, int age,
                          String email, String region, String favoriteFood, String mbti, String sns) {
-        Member member = getCurrentMember();
+        // 현재 로그인된 회원 정보를 가져옵니다. 이미 파라미터로 받았으므로 불필요한 코드입니다.
+        // Member member = getCurrentMember();
 
-         member = Member.builder()
-                .phoneNumber(phoneNumber)
-                .nickname(nickname)
-                .password(passwordEncoder.encode(password))
-                .email(email)
-                .region(region)
-                .favoriteFood(favoriteFood)
-                .age(age)
-                .sns(sns)
-                .mbti(mbti)
-                .build();
+        // 기존 회원 정보를 수정합니다.
+        member.setPhoneNumber(phoneNumber);
+        member.setNickname(nickname);
+        member.setPassword(passwordEncoder.encode(password));
+        member.setEmail(email);
+        member.setRegion(region);
+        member.setFavoriteFood(favoriteFood);
+        member.setAge(age);
+        member.setSns(sns);
+        member.setMbti(mbti);
 
+        // 수정된 회원 정보를 저장하고 반환합니다.
         return memberRepository.save(member);
     }
+
 
     private Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
