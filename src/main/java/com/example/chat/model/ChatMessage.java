@@ -1,10 +1,7 @@
 package com.example.chat.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -12,22 +9,17 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "chat_message")
+@Data
 public class ChatMessage {
-    // 메시지 타입 : 입장, 채팅
+    @Id  // This annotation marks the below field as the primary key
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // This strategy generates a unique value automatically
+    private Long id;  // Primary key field
+
     public enum MessageType {
-        ENTER, TALK
+        ENTER, TALK, EXIT, MATCH, MATCH_REQUEST;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Enumerated(EnumType.STRING)
-    private MessageType type; // 메시지 타입
-
-    private String roomId; // 방번호
-
-    private String sender; // 메시지 보낸사람
-
-    private String message; // 메시지
+    private MessageType type;
+    private String roomId;
+    private String sender;
+    private String message;
 }

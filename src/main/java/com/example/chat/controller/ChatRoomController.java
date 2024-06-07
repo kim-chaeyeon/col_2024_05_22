@@ -3,9 +3,7 @@ package com.example.chat.controller;
 import com.example.chat.model.ChatRoom;
 import com.example.chat.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +19,6 @@ public class ChatRoomController {
 
     private final ChatRoomRepository chatRoomRepository;
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/rooms")
     public String rooms(Model model) {
         return "room";  // Assuming 'room.html' is under the 'src/main/resources/templates' directory
@@ -29,12 +26,11 @@ public class ChatRoomController {
 
     @GetMapping("/api/rooms")
     @ResponseBody
-    public ResponseEntity<List<ChatRoom>> getAllRooms() {
-        List<ChatRoom> rooms = chatRoomRepository.findAll();
-        return ResponseEntity.ok(rooms);
+    public List<ChatRoom> getAllRooms() {
+        return chatRoomRepository.findAll();
     }
 
-    @PreAuthorize("isAuthenticated()")
+
     @PostMapping("/room")
     @ResponseBody
     public ResponseEntity<ChatRoom> createRoom(@RequestParam("name") String name) {
@@ -53,12 +49,7 @@ public class ChatRoomController {
 
     @GetMapping("/room/{roomId}")
     @ResponseBody
-    public ResponseEntity<?> roomInfo(@PathVariable("roomId") UUID roomId) {
-        try {
-            ChatRoom room = chatRoomRepository.findById(roomId).orElseThrow(() -> new Exception("Room not found"));
-            return ResponseEntity.ok(room);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving room: " + e.getMessage());
-        }
+    public ChatRoom roomInfo(@PathVariable UUID roomId) {
+        return chatRoomRepository.findById(roomId).orElse(null);
     }
 }

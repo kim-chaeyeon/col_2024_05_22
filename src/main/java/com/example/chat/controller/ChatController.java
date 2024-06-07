@@ -7,11 +7,10 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class    ChatController {
+public class ChatController {
 
     @Autowired
     private ChatMessageService messageService;
@@ -19,14 +18,15 @@ public class    ChatController {
     @MessageMapping("/chat/message/{roomId}")
     @SendTo("/sub/chat/room/{roomId}")
     public ChatMessage sendMessage(@Payload ChatMessage message, @DestinationVariable("roomId") String roomId) {
-        if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+        try {
             if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
                 message.setMessage(message.getSender() + "님이 입장하셨습니다.");
             }
             message.setRoomId(roomId);
             return messageService.save(message);
-        } else {
-            throw new IllegalStateException("User not authenticated");
+        } catch (Exception e) {
+
+            return null;
         }
     }
 
@@ -36,4 +36,5 @@ public class    ChatController {
         message.setRoomId(roomId);
         return messageService.save(message);
     }
+
 }

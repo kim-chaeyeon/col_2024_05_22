@@ -1,9 +1,7 @@
 package com.example.chat.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,13 +14,18 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name="chat_room")
+@Data
 public class ChatRoom {
-
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(updatable = false, nullable = false)
     private UUID roomId;
     private String name;
 
-
+    public static ChatRoom create(String name) {
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.roomId = UUID.fromString(UUID.randomUUID().toString());
+        return chatRoom;
+    }
 }
