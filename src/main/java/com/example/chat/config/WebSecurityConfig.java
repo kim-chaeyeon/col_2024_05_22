@@ -19,9 +19,9 @@ public class WebSecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                        .requestMatchers(new AntPathRequestMatcher("/member/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/chat/room")).authenticated()
-                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
+                        .requestMatchers(new AntPathRequestMatcher("/member/**")).permitAll() // 회원 관련 페이지는 모두 허용
+                        .requestMatchers(new AntPathRequestMatcher("/chat/**")).authenticated() // 채팅 경로는 인증 필요
+                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()) // 나머지 경로는 모두 허용
                 .formLogin(
                         formLogin -> formLogin
                                 .loginPage("/member/login")
@@ -39,7 +39,7 @@ public class WebSecurityConfig {
                 )
                 .csrf((csrf) -> csrf
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/**")))
-                ;
+        ;
         return http.build();
     }
 

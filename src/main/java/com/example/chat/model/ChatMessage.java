@@ -22,4 +22,6 @@ public class ChatMessage {
     private String roomId;
     private String sender;
     private String message;
+    @Column(name = "timestamp")
+    private String timestamp;
 }

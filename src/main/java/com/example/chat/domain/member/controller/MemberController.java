@@ -71,6 +71,15 @@ public class MemberController {
             return "member/signup"; // 오류 발생 시 다시 회원 가입 페이지로
         }
     }
+    @GetMapping("/current")
+    public ResponseEntity<Member> getCurrentUser() {
+        try {
+            Member currentMember = memberService.getCurrentMember();
+            return ResponseEntity.ok(currentMember);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
 
 
     @GetMapping("/sendVerificationEmail")
@@ -124,4 +133,6 @@ public class MemberController {
             return ResponseEntity.badRequest().body("유효하지 않은 인증 코드입니다.");
         }
     }
+
+
 }

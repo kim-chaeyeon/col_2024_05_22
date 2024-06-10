@@ -21,11 +21,13 @@ public class ChatRoom {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(updatable = false, nullable = false)
     private UUID roomId;
+
     private String name;
 
-    public static ChatRoom create(String name) {
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.roomId = UUID.fromString(UUID.randomUUID().toString());
-        return chatRoom;
-    }
+
+//    public static ChatRoom create(String name) {
+//        ChatRoom chatRoom = new ChatRoom();
+//        chatRoom.roomId = UUID.fromString(UUID.randomUUID().toString());
+//        return chatRoom;
+//    }
 }
