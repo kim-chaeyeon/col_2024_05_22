@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>밥은 먹고 다니냐?</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <style>
         body {
             margin: 0;
@@ -33,6 +34,25 @@
         header .right a {
             margin-left: 15px;
             font-size: 16px;
+        }
+        .header-slider {
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+        }
+        .swiper-container {
+            width: 100%;
+            height: 300px;
+        }
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .swiper-slide img {
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
         }
         .container {
             display: flex;
@@ -64,6 +84,7 @@
         section header,
         section footer {
             background-color: #FFD700;
+            justify-content: space-evenly;
             padding: 10px;
             margin-bottom: 10px;
             font-weight: bold;
@@ -91,6 +112,12 @@
             display: block;
             margin: 0 auto 20px;
         }
+        .header-slider .swiper-slide img,
+        .container img {
+            width: 80%;
+            height: 80%;
+
+        }
     </style>
 </head>
 <body>
@@ -106,12 +133,39 @@
     </div>
 </header>
 
+<div class="header-slider swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <img src="https://i.ibb.co/kHFkNNr/001-removebg-preview.png" alt="Slide 1">
+        </div>
+        <div class="swiper-slide">
+            <img src="https://i.ibb.co/m59GCsF/image.jpg" alt="Slide 2">
+        </div>
+        <div class="swiper-slide">
+            <img src="https://i.ibb.co/BVmSBkn/image.jpg" alt="Slide 3">
+        </div>
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+    <!-- Add Navigation -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+</div>
+
 <div class="container">
     <nav>
         <img src="https://i.ibb.co/j5tSMPV/image.jpg" alt="밥은 먹고 다니냐?" >
-        &lt;nav&gt;</nav>
+        &lt;nav&gt;
+    </nav>
     <section>
-        <header>&lt;header&gt;</header>
+        <header>
+            <div class="right">
+                <a href="#">맛집 추천</a></div>
+            <div class="center">
+                <a href="#">밥 친구 구함</a></div>
+            <div class="left">
+                <a href="#">일상 스토리</a></div>
+        </header>
         <article>
             <img src="https://i.ibb.co/kHFkNNr/001-removebg-preview.png" alt="밥은 먹고 다니냐?">
             &lt;article&gt;
@@ -120,12 +174,30 @@
         </footer>
     </section>
     <aside>
-        <img src="https://i.ibb.co/j5tSMPV/image.jpg" alt="밥은 먹고 다니냐?" >
-        &lt;aside&gt;</aside>
+        <img src="https://github.com/Junsu-Ahn/cookers/assets/156152342/6183c7c2-d209-4d1a-8276-9232162d1226" alt="밥은 먹고 다니냐?" width="50%" height="50%">
+        밥바오톡
+    </aside>
 </div>
 <footer>&lt;footer&gt;</footer>
 
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
+    // Initialize Swiper
+    var swiper = new Swiper('.swiper-container', {
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+    });
+
     // 서버에서 받아온 사용자 정보
     var userInfo = {
         loggedIn: false, // 로그인 상태 여부

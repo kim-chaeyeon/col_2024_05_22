@@ -8,36 +8,41 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            height: 100%;
+            margin: 10%;
+            width: 100%
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
         .container {
-            text-align: center;
+            width: 100%;
+            max-width: 1200px;
             background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
+            padding: 50px;
+            border-radius: 100px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 600px;
             box-sizing: border-box;
         }
         h1 {
-            margin-bottom: 30px;
-            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 32px;
             color: #333;
         }
         .profile-img {
+            display: block;
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            margin-bottom: 20px;
+            margin: 0 auto 20px;
             object-fit: cover;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         form {
             margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         label {
             font-size: 18px;
@@ -48,16 +53,15 @@
         input[type="password"],
         input[type="email"],
         input[type="number"],
-        select {
+        select,
+        input[type="file"] {
             width: calc(100% - 20px);
             padding: 10px;
-            margin: 10px 0;
+            margin: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
-        }
-        input[type="file"] {
-            margin: 10px 0;
+            box-sizing: border-box;
         }
         .btn {
             width: calc(50% - 10px);
@@ -68,14 +72,14 @@
             color: #fff;
             font-size: 16px;
             cursor: pointer;
-            margin-bottom: 20px;
+            margin: 10px;
         }
         .btn:hover {
             background-color: #0056b3;
         }
         .main-btn {
             display: inline-block;
-            margin: 10px 0;
+            margin: 10px;
             padding: 10px 20px;
             background-color: #FFCE45;
             color: #333;
@@ -87,58 +91,96 @@
         .main-btn:hover {
             background-color: #FFD700;
         }
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .radio-group {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .radio-group label {
+            margin-right: 10px;
+        }
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
-<a th:href="@{/}" class="main-btn">메인 화면으로 이동</a>
 <div class="container">
+    <a th:href="@{/}" class="main-btn">메인 화면으로 이동</a>
     <h1>내 정보 수정 페이지</h1>
-    <!--    <img th:src="@{|/file/${member.thumbnailImg}|}" alt="프로필 사진" class="profile-img"/>-->
-
+    <img th:src="@{|/file/${member.thumbnailImg}|}" alt="프로필 사진" class="profile-img"/>
     <form action="showModifyForm" method="post" enctype="multipart/form-data" th:action="@{/member/modify}">
-        <label for="phoneNumber">전화번호:</label>
-        <input type="text" id="phoneNumber" name="phoneNumber" th:value="${member.phoneNumber}" required><br>
+        <div class="form-group">
+            <label for="thumbnail"><i class="fas fa-camera"></i> 프로필 사진:</label>
+            <input type="file" id="thumbnail" name="thumbnail" accept="image/*">
+        </div>
 
-        <label for="nickname">닉네임:</label>
-        <input type="text" id="nickname" name="nickname" th:value="${member.nickname}" required><br>
+        <div class="form-group">
+            <label for="phoneNumber"><i class="fas fa-phone"></i> 전화번호:</label>
+            <input type="text" id="phoneNumber" name="phoneNumber" th:value="${member.phoneNumber}" required>
+        </div>
 
-        <label for="password">비밀번호:</label>
-        <input type="password" id="password" name="password" required><br>
+        <div class="form-group">
+            <label for="nickname"><i class="fas fa-user"></i> 닉네임:</label>
+            <input type="text" id="nickname" name="nickname" th:value="${member.nickname}" required>
+        </div>
 
-        <label for="email">이메일:</label>
-        <input type="email" id="email" name="email" th:value="${member.email}" required><br>
+        <div class="form-group">
+            <label for="password"><i class="fas fa-lock"></i> 비밀번호:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
 
-        <label for="age">나이:</label>
-        <input type="number" id="age" name="age" th:value="${member.age}" required min="18"><br>
+        <div class="form-group">
+            <label for="email"><i class="fas fa-envelope"></i> 이메일:</label>
+            <input type="email" id="email" name="email" th:value="${member.email}" required>
+        </div>
 
-        <label for="gender" required >성별:</label>
-        <input type="radio" id="남성" name="gender" th:value="남성" th:checked="${member.gender == '남성'}">
-        <label for="남성">남성</label>
-        <input type="radio" id="여성" name="gender" th:value="여성" th:checked="${member.gender == '여성'}">
-        <label for="여성">여성</label><br>
+        <div class="form-group">
+            <label for="age"><i class="fas fa-birthday-cake"></i> 나이:</label>
+            <input type="number" id="age" name="age" th:value="${member.age}" required min="18">
+        </div>
 
-        <label for="region"><i class="fas fa-map-marker-alt"></i> 지역 (필수) :</label>
-        <select id="region" name="region" required>
-            <option value="--">--</option>
-            <option value="서울">서울</option>
-            <option value="경기">경기</option>
-            <option value="인천">인천</option>
-            <option value="대전">대전</option>
-            <option value="부산">부산</option>
-            <!-- 다른 지역 옵션들 추가 -->
-        </select>
+        <div class="form-group">
+            <label for="gender" required><i class="fas fa-venus-mars"></i> 성별:</label>
+            <div class="radio-group">
+                <input type="radio" id="남성" name="gender" th:value="남성" th:checked="${member.gender == '남성'}">
+                <label for="남성">남성</label>
+                <input type="radio" id="여성" name="gender" th:value="여성" th:checked="${member.gender == '여성'}">
+                <label for="여성">여성</label>
+            </div>
+        </div>
 
-        <label for="favoriteFood">선호 음식:</label>
-        <input type="text" id="favoriteFood" name="favoriteFood" th:value="${member.favoriteFood}" required><br>
+        <div class="form-group">
+            <label for="region"><i class="fas fa-map-marker-alt"></i> 지역 (필수) :</label>
+            <select id="region" name="region" required>
+                <option value="--">--</option>
+                <option value="서울">서울</option>
+                <option value="경기">경기</option>
+                <option value="인천">인천</option>
+                <option value="대전">대전</option>
+                <option value="부산">부산</option>
+                <!-- 다른 지역 옵션들 추가 -->
+            </select>
+        </div>
 
-        <label for="mbti">MBTI:</label>
-        <input type="text" id="mbti" name="mbti" th:value="${member.mbti}"><br>
+        <div class="form-group">
+            <label for="favoriteFood"><i class="fas fa-utensils"></i> 선호 음식:</label>
+            <input type="text" id="favoriteFood" name="favoriteFood" th:value="${member.favoriteFood}" required>
+        </div>
 
-        <label for="sns">인스타그램:</label>
-        <input type="text" id="sns" name="sns" th:value="${member.sns}"><br>
+        <div class="form-group">
+            <label for="mbti"><i class="fas fa-smile"></i> MBTI:</label>
+            <input type="text" id="mbti" name="mbti" th:value="${member.mbti}">
+        </div>
 
-        <label for="thumbnail">프로필 사진:</label>
-        <input type="file" id="thumbnail" name="thumbnail" accept="image/*"><br>
+        <div class="form-group">
+            <label for="sns"><i class="fas fa-instagram"></i> 인스타그램:</label>
+            <input type="text" id="sns" name="sns" th:value="${member.sns}">
+        </div>
 
         <button type="submit" class="btn">수정하기</button>
     </form>
