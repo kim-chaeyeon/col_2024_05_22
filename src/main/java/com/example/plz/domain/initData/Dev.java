@@ -34,6 +34,7 @@ public class Dev {
 
             } catch (IOException e) {
                 e.printStackTrace();
+
             }
 
             File file1 = new File("C:\\Users\\SBS\\Desktop\\개구리.jpg");
